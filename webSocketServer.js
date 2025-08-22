@@ -58,6 +58,7 @@ if (cluster.isPrimary) {
 
   setupPrimary();
 } else {
+  
   const io = new Server(server, {
     connectionStateRecovery: {},
     adapter: createAdapter(),
@@ -66,9 +67,9 @@ if (cluster.isPrimary) {
       methods: ["GET", "POST"],
     },
     // Dodano za stabilnost konekcije
-    pingTimeout: 60000,
+    pingTimeout: 120000,
     pingInterval: 25000,
-    transports: ["websocket", "polling"],
+    transports: [ "polling", "websocket"],
   });
 
   // API ENDPOINT: Dohvaćanje chat-ova korisnika
@@ -419,7 +420,7 @@ if (cluster.isPrimary) {
       }
     });
 
-    // Dodaj heartbeat za stabilnost konekcije
+    // heartbeat za stabilnost konekcije
     socket.on("ping", () => {
       socket.emit("pong");
     });
@@ -429,7 +430,7 @@ if (cluster.isPrimary) {
       console.log(`User disconnected (${reason}). Total: ${activeConnections}`);
     });
 
-    // Dodaj error handler
+    // error handler
     socket.on("error", (error) => {
       console.error("Socket error:", error);
     });

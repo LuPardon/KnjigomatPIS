@@ -52,7 +52,6 @@ app.use("/api/notifications", notificationRoutes);
 app.use("/images", express.static("images"));
 const path = require("path");
 app.use("/images", express.static(path.join(__dirname, "images")));
-//40l images folder radi bez obzira na to odakle se pokreće server
 
 const PORT = process.env.PORT || 3000;
 app.listen(PORT, () => console.log(`Server radi na portu ${PORT}`));
