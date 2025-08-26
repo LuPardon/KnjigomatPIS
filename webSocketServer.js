@@ -63,10 +63,10 @@ if (cluster.isPrimary) {
     connectionStateRecovery: {},
     adapter: createAdapter(),
     cors: {
-      origin: "*", // Za produkciju, ograničeno na specific domene
+      origin: "*", 
       methods: ["GET", "POST"],
     },
-    // Dodano za stabilnost konekcije
+    // Stabilnost konekcije
     pingTimeout: 120000,
     pingInterval: 25000,
     transports: [ "polling", "websocket"],

@@ -6,7 +6,7 @@ const Notification = {
     try {
       await connection.beginTransaction();
 
-      // Insert notification
+      // Postavljanje notifikacije
       const notificationQuery = `INSERT INTO notifications (user_id, title, message, is_read) VALUES (?, ?, ?, ?)`;
       const notificationValues = [
         data.bookOwnerId,
@@ -19,7 +19,7 @@ const Notification = {
         notificationValues
       );
 
-      // Insert borrow request
+      // Postavljanje borrow request-a
       const [borrowRequestResult] = await connection.query(
         "INSERT INTO borrow_requests (book_id, requester_id, owner_id, status_id, notification_id) VALUES (?, ?, ?, ?, ?)",
         [
@@ -31,7 +31,7 @@ const Notification = {
         ]
       );
 
-      // Check if chat exists
+      // Provjera da li chat već postoji
       const [chatResult] = await connection.query(
         "SELECT chat_id FROM chats WHERE (person1_id = ? AND person2_id = ?) OR (person1_id = ? AND person2_id = ?)",
         [data.requesterId, data.bookOwnerId, data.bookOwnerId, data.requesterId]
@@ -39,7 +39,7 @@ const Notification = {
 
       let chatId;
       if (!chatResult.length) {
-        // Create new chat
+        // Kreiranje novog chat-a ako ne postoji
         const [newChatResult] = await connection.query(
           "INSERT INTO chats (person1_id, person2_id) VALUES (?, ?)",
           [data.requesterId, data.bookOwnerId]
@@ -49,7 +49,7 @@ const Notification = {
         chatId = chatResult[0].chat_id;
       }
 
-      // Insert message
+      // Postavljanje početne poruke
       const [messageResult] = await connection.query(
         "INSERT INTO messages (chat_id, sender_id, content, borrow_request_id) VALUES (?, ?, ?, ?)",
         [chatId, data.requesterId, data.message, borrowRequestResult.insertId]
@@ -74,7 +74,7 @@ const Notification = {
 
   getByUserId: async (userId) => {
     try {
-      // Optimized query with JOINs to fetch all data in one go
+      // Optimizira query s JOINs da dohvaća sve podatke in one go umjesto multiple queries
       const query = `
         SELECT 
           n.*,
@@ -93,7 +93,7 @@ const Notification = {
 
       const [results] = await db.query(query, [userId]);
 
-      // Clean up results - handle cases where joins might return null values
+      // Očisti rezultate - handle-a slučajeve gdje joins mogu vraćati null vrijednosti
       return results.map((notification) => ({
         notification_id: notification.notification_id,
         title: notification.title,
@@ -126,12 +126,12 @@ const Notification = {
             [notification.notification_id]
           );
 
-          // Check if borrow request exists
+          // Provjera da li borrow request postoji
           if (!borrowResult.length) {
             console.warn(
               `No borrow request found for notification ${notification.notification_id}`
             );
-            // Set default values when no borrow request exists
+            // Postavlja default vrijednosti kad borrow request ne postoji
             notification.chat_id = null;
             notification.book_id = null;
             notification.book_title = null;
@@ -149,7 +149,7 @@ const Notification = {
             [borrowResult[0].book_id]
           );
 
-          // Safely assign values
+          // Sigurno postavljene vrijednosti
           notification.chat_id = messageResult.length
             ? messageResult[0].chat_id
             : null;
@@ -163,7 +163,7 @@ const Notification = {
             `Error processing notification ${notification.notification_id}:`,
             innerError
           );
-          // Set null values for failed processing
+          // Postavi null vrijednosti za pogrešno procesiranje
           notification.chat_id = null;
           notification.book_id = null;
           notification.book_title = null;

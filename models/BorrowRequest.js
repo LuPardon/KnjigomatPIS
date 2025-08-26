@@ -49,7 +49,6 @@ const BorrowRequest = {
       [borrow_requestResult[0].book_id]
     );
     if (bookResult[0].status_id == 2) {
-      // cant update
       return {};
     } else {
       await db.query("update books set book_status_id = 2 where book_id = ?", [
@@ -66,7 +65,7 @@ const BorrowRequest = {
           borrow_requestResult[0].book_id,
           borrow_requestResult[0].requester_id,
           borrow_requestResult[0].owner_id,
-          3, // u tijeku,
+          3, // u tijeku
         ]
       );
     }

@@ -19,7 +19,7 @@ const Book = {
         images.push(image[0].image_path || null);
       }
 
-      // Dodajemo niz slika u objekt knjige
+      // Dodaje niz slika u objekt knjige
       book.image_paths = images;
     }
     return books;
@@ -84,12 +84,10 @@ const Book = {
         [book.book_id]
       );
 
-      // ovo je niz slika
+      // Niz slika
       const images = [];
 
-      // Za svaku vezu slike koju smo dohvatili gore
-      // dohvaćamo stvarnu putanju slike iz tablice images
-      // i dodajemo je u niz slika
+      // Za svaku vezu slike koju dohvati gore dohvaća stvarnu putanju slike iz tablice images i dodaje u niz slika
       for (const image_link of image_links) {
         const [image] = await db.query(
           "SELECT image_path FROM images WHERE image_id = ?",
@@ -98,7 +96,7 @@ const Book = {
         images.push(image[0].image_path);
       }
 
-      // Dodajemo niz slika u objekt knjige
+      // Dodaje niz slika u objekt knjige
       book.image_paths = images;
     }
     return book;
@@ -188,8 +186,7 @@ const Book = {
   },
 
   delete: async (bookId) => {
-    // ako knjiga postoji izbriši je
-    // izbrisati i iz mape
+    // ako knjiga postoji izbriši je i iz mape
     const [books] = await db.query("SELECT * FROM books WHERE book_id = ?", [
       bookId,
     ]);

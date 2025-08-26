@@ -56,7 +56,7 @@ exports.acceptRequest = async (req, res) => {
     const requestId = req.params.id;
     await borrowRequestService.updateStatus(requestId, 2); // 2 je ID statusa "prihvaćen"
 
-    // insertanje u ExchangeHistory
+    // insert-anje u ExchangeHistory
     console.log("Zahtjev prihvaćen:", requestId);
     res.json({ message: "Zahtjev potvrđen." });
   } catch (err) {
@@ -67,7 +67,7 @@ exports.acceptRequest = async (req, res) => {
 
 exports.rejectRequest = async (req, res) => {
   try {
-    // trebam samo id zahtjeva, a status će biti odbijen
+    // treba samo id zahtjeva, a status će biti odbijen
     const requestId = req.params.id;
     await borrowRequestService.updateStatus(requestId, 3); // 3 je ID statusa "odbijen"
 
