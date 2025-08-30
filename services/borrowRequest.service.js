@@ -1,4 +1,4 @@
-const BorrowRequest = require("../models/BorrowRequest");
+const BorrowRequest = require("../DAL/BorrowRequest");
 
 const create = async (data) => {
   return await BorrowRequest.create(data);

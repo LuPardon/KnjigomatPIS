@@ -1,4 +1,4 @@
-const Message = require("../models/Message");
+const Message = require("../DAL/Message");
 
 const create = async (data) => {
   return await Message.create(data);

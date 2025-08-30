@@ -1,4 +1,4 @@
-const BookImage = require("../models/BookImage");
+const BookImage = require("../DAL/BookImage");
 
 const getImagesByBook = async (bookId) => {
   return await BookImage.getByBookId(bookId);

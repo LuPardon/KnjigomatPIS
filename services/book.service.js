@@ -1,4 +1,4 @@
-const Book = require("../models/Book");
+const Book = require("../DAL/Book");
 
 const getAllBooks = async () => {
   return await Book.getAll();

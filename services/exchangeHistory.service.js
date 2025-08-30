@@ -1,4 +1,4 @@
-const ExchangeHistory = require("../models/ExchangeHistory");
+const ExchangeHistory = require("../DAL/ExchangeHistory");
 
 const create = async (data) => {
   return await ExchangeHistory.create(data);
