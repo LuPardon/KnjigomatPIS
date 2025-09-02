@@ -48,16 +48,23 @@ const BorrowRequest = {
       "select * from books where book_id = ? limit 1",
       [borrow_requestResult[0].book_id]
     );
+
     if (bookResult[0].status_id == 2) {
       return {};
-    } else {
-      await db.query("update books set book_status_id = 2 where book_id = ?", [
-        borrow_requestResult[0].book_id,
-      ]);
+    }
+
+    // ako end_date je null i knjiga id
+    const [isAvailable] = await db.query(
+      "select * from exchange_history where book_id = ? and end_date is null",
+      [bookResult[0].book_id]
+    );
+    if (isAvailable.length > 0 && status_id == 2) {
+      return {};
     }
 
     console.log("Borrow Request Result:", borrow_requestResult[0]);
     if (status_id != 3) {
+      // ako nije u tijeku
       const [exchangeHistoryResult] = await db.query(
         `INSERT INTO exchange_history (book_id, borrower_id, lender_id, status_ex_id)
          VALUES (?, ?, ?, ?)`,
@@ -69,7 +76,12 @@ const BorrowRequest = {
         ]
       );
     }
-
+    if (status_id == 2) {
+      // ako je prihvacen
+      await db.query("update books set book_status_id = 2 where book_id = ?", [
+        borrow_requestResult[0].book_id,
+      ]);
+    }
     const [notificationResult] = await db.query(
       "insert into notifications (title, user_id, message) values (?, ?, ?)",
       [
